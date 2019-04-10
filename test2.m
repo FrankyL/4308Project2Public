@@ -7,7 +7,7 @@ allxobs = data{1};
 allyobs = data{2};
 
 %Set up waypoint coordinates
-waypt=[-1.5 1.5 ; 2 0; -1.5 -1.5]
+waypt=[-1.5 1.5 ; 2 0.1 ; 2 -0.125; -1.5 -1.5]
 
 
 % Array setup and create an array with resolution stated in gridres
@@ -30,7 +30,7 @@ n=0;
 
 
 %read path.txt and start writing into it the take off sequence
-fileIDPath = fopen('path.txt','w');
+fileIDPath = fopen('path2.txt','w');
 %take off
 
 fprintf(fileIDPath, 'Taking off sequence\r\n');
@@ -306,13 +306,21 @@ fprintf(fileIDPath, '===\r\n');
 
 
 
+fprintf(fileIDPath, 'Horizontal Flight through point B\r\n');
+height = 0;
+tAllot = 0.75;
+nDataP = tAllot * 20; %number of data points = time allocated * 20 Hz
+dPDataP = - (waypt(2,2) - waypt(3,2))/nDataP; % distance per data point =  1m / number of data point
+height = waypt(2,2):dPDataP:waypt(3,2);
+fprintf(fileIDPath, '2.000 %4.3f 1.000 0 0 0 0 0 0 0 0\r\n',height);
+
 %BEGIN MOVING FROM WAYPOINT B TO C#########################################
 
 
 
 
-xDestTxt=waypt(3,1)
-yDestTxt=waypt(3,2)
+xDestTxt=waypt(4,1)
+yDestTxt=waypt(4,2)
 xval = round(-yDestTxt*gridres/actgrid + gridres/2)
 yval = round(xDestTxt*gridres/actgrid + gridres/2)
 xTarget = xval;
@@ -386,8 +394,8 @@ end
 
 
 % Setup Starting waypoint
-xStartTxt=waypt(2,1)
-yStartTxt=waypt(2,2)
+xStartTxt=waypt(3,1)
+yStartTxt=waypt(3,2)
 xval = round(-yStartTxt*gridres/actgrid + gridres/2)
 yval = round(xStartTxt*gridres/actgrid + gridres/2)
 xStart = xval
